@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TouristSpotter</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url('../static/images/geognosis.jpeg') no-repeat center center;
+            background-size: cover;
+        }
+
+        h1 {
+            color: #333;
+            margin-top: 20px;
+            font-size: 48px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .container {
+            height: 100%;
+            width: 100%;
+            max-width: 1200px; /* Adjust maximum width as needed */
+            margin: 0 auto;
+        }
+    
+
+        #map {
+            height: calc(100% - 24%); /* Default height */
+            width: 80%;
+            margin: auto;
+            /* background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url('../static/images/geognosis.jpeg') no-repeat center center;
+            background-size: cover; */
+        }
+
+        @media (max-width: 768px) {
+            #map {
+                height: 50%; /* Adjust height for smaller screens */
+            }
+        }
+
+        @media (max-width: 480px) {
+            #map {
+                height: 40%; /* Further adjust height for very small screens */
+            }
+        }
+
+        .flex-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #searchLabel {
+            background: linear-gradient(45deg, #0d1721, #5d9fee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        form {
+            width: 100%;
+            max-width: 600px; /* Align with map width */
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            background: #fff;
+            padding: 10px;
+            border-radius: 50px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        form input[type="text"] {
+            flex: 1;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+        }
+
+        form button {
+            padding: 10px 20px;
+            background: linear-gradient(45deg, #007BFF, #00d2ff);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+            margin-left: 10px;
+        }
+
+        form button:hover {
+            background: linear-gradient(45deg, #0056b3, #00aaff);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="flex-wrapper">
+            <h1 id="searchLabel">GeoGnossis</h1>
+            <form id="locationForm">
+                <input type="text" id="placeName" name="placeName" placeholder="Enter a place name or coordinates (latitude,longitude)" required>
+                <button type="submit">Search</button>
+            </form>
+        </div>
+        <div id="map"></div>
+    </div>
+    <script>
+        document.getElementById('locationForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const placeName = document.getElementById('placeName').value;
+            getAttractions(placeName);
+        });
+
+        async function getAttractions(place) {
+            try {
+                const response = await axios.post('/getAttractions', { place });
+                const data = response.data;
+                const attractions = data.attractions;
+                const location = data.location;
+                displayMap(attractions, location);
+            } catch (error) {
+                console.error('Error fetching attractions:', error);
+            }
+        }
+
+        function displayMap(attractions, location) {
+            const map = L.map('map').setView([37.7749, -122.4194], 13); // Default to San Francisco
+
+            if (location) {
+                map.setView([location.lat, location.lon], 13); // Center the map on the location
+            }
+                
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            attractions.forEach(attraction => {
+                L.marker([attraction.lat, attraction.lon])
+                    .bindPopup(attraction.name)
+                    .addTo(map);
+            });
+        }
+    </script>
+</body>
+</html>
