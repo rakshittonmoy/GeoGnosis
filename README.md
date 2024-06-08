@@ -24,3 +24,15 @@ format.
 ## License: 
 OpenStreetMap (OSM) data is available under the Open Database
 License (ODbL)
+
+# Setup   
+
+Setup python environment   
+python -m venv venv    
+source venv/bin/activate    
+pip install -r ./config/requirements.txt   
+
+Run the Flask app   
+flask run    
+
+Open your browser and navigate to http://127.0.0.1:5000 to see the application in action.   

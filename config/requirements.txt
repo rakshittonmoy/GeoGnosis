@@ -1,3 +1,6 @@
 requests
 pymysql
 folium
+pymongo
+flask
+geopy
