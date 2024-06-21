@@ -1,0 +1,79 @@
+[
+    {
+       "place": "chicago",
+       "name": "The Wave Wall",
+       "lat": 41.8912454,
+       "lon": -87.6075786,
+       "distance": 2352.208807011778
+    },
+    {
+       "place": "chicago",
+       "name": "The Escape Game Chicago",
+       "lat": 41.8934261,
+       "lon": -87.6263927,
+       "distance": 1729.294368011214
+    },
+    {
+       "place": "chicago",
+       "name": "Sea Otter",
+       "lat": 41.8678633,
+       "lon": -87.6132034,
+       "distance": 1786.3701382856586
+    },
+    {
+       "place": "chicago",
+       "name": "Beluga",
+       "lat": 41.8673317,
+       "lon": -87.6130031,
+       "distance": 1837.2433031773871
+    },
+    {
+       "place": "chicago",
+       "name": "Penguins",
+       "lat": 41.8675992,
+       "lon": -87.6132033,
+       "distance": 1805.2746186440415
+    },
+    {
+       "place": "chicago",
+       "name": "SkyDeck Chicago Willis Tower",
+       "lat": 41.8785046,
+       "lon": -87.6358868,
+       "distance": 506.50511581400355
+    },
+    {
+       "place": "chicago",
+       "name": "Weather Bell",
+       "lat": 41.8805793,
+       "lon": -87.6304123,
+       "distance": 280.6198524378151
+    },
+    {
+       "place": "chicago",
+       "name": "Sea Lion",
+       "lat": 41.8674176,
+       "lon": -87.6132257,
+       "distance": 1817.026817587938
+    },
+    {
+       "place": "chicago",
+       "name": "Begin Route 66",
+       "lat": 41.8796145,
+       "lon": -87.6246298,
+       "distance": 460.4950471570787
+    },
+    {
+       "place": "chicago",
+       "name": "Dolphin",
+       "lat": 41.867919,
+       "lon": -87.6130245,
+       "distance": 1793.8909924496807
+    },
+    {
+       "place": "chicago",
+       "name": "The Ledge",
+       "lat": 41.8788896,
+       "lon": -87.6363229,
+       "distance": 547.7412815731313
+    }
+ ]
