@@ -2,6 +2,7 @@ import requests
 import xml.etree.ElementTree as ET
 import datetime
 from geopy.geocoders import Nominatim
+import collections
 
 class GeoDataFetcher:
     def __init__(self, db):
@@ -39,6 +40,31 @@ class GeoDataFetcher:
             if name:
                 attractions.append({'name': name, 'lat': lat, 'lon': lon})
         return attractions
+    
+    def parse_osm_data(self, xml_data):
+        attractions = []
+        tree = ET.ElementTree(ET.fromstring(xml_data))
+        root = tree.getroot()
+        
+        # Initialize a queue for BFS traversal
+        queue = collections.deque([root])
+        
+        while queue:
+            node = queue.popleft()
+            if node.tag == 'node':
+                lat = float(node.get('lat'))
+                lon = float(node.get('lon'))
+                name = None
+                for tag in node.findall('tag'):
+                    if tag.get('k') == 'name':
+                        name = tag.get('v')
+                if name:
+                    attractions.append({'name': name, 'lat': lat, 'lon': lon})
+            elif node.tag == 'way' or node.tag == 'relation':
+                # If it's a way or relation, add its children nodes to the queue
+                queue.extend(node.findall('.//node'))
+    
+        return attractions
 
     def get_attractions(self, place):
         location = self.geolocator.geocode(place)
@@ -49,6 +75,9 @@ class GeoDataFetcher:
                 attractions = cached_data['attractions']
             else:
                 xml_data = self.fetch_osm_data(bbox)
+                 # Save the XML data to a file
+                with open(f'osm_data_{bbox}.xml', 'w') as file:
+                    file.write(xml_data)
                 attractions = self.parse_osm_data(xml_data)
                 self.collection.update_one(
                     {'place': place},
