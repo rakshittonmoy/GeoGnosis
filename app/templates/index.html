@@ -2,10 +2,14 @@
 <html>
 <head>
     <title>TouristSpotter</title>
+    <!-- Leaflet CSS for map styling -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <!-- Leaflet JS for map functionality -->
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <!-- Axios for making HTTP requests -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
+        /* Ensuring that body and html take up full height and have no margin/padding */
         body, html {
             height: 100%;
             margin: 0;
@@ -16,6 +20,7 @@
             background-size: cover;
         }
 
+        /* Style for the main heading */
         h1 {
             color: #333;
             margin-top: 20px;
@@ -24,25 +29,25 @@
             text-align: center;
         }
 
+        /* Container to hold the form and the map */
         .container {
             height: 100%;
             width: 100%;
-            max-width: 1200px; /* Adjust maximum width as needed */
+            max-width: 1200px;
             margin: 0 auto;
         }
-    
 
+        /* Style for the map element */
         #map {
-            height: calc(100% - 24%); /* Default height */
+            height: calc(100% - 24%); 
             width: 80%;
             margin: auto;
-            /* background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url('../static/images/geognosis.jpeg') no-repeat center center;
-            background-size: cover; */
         }
 
+        /* Adjust map height for smaller screens */
         @media (max-width: 768px) {
             #map {
-                height: 50%; /* Adjust height for smaller screens */
+                height: 50%; 
             }
         }
 
@@ -52,18 +57,21 @@
             }
         }
 
+        /* Flex container to center elements */
         .flex-wrapper {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
+        /* Gradient text style for the label */
         #searchLabel {
             background: linear-gradient(45deg, #0d1721, #5d9fee);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
+        /* Style for the form element */
         form {
             width: 100%;
             max-width: 600px; /* Align with map width */
@@ -76,6 +84,7 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
+        /* Style for the form input field */
         form input[type="text"] {
             flex: 1;
             padding: 10px 20px;
@@ -84,6 +93,7 @@
             font-size: 16px;
         }
 
+        /* Style for the form button */
         form button {
             padding: 10px 20px;
             background: linear-gradient(45deg, #007BFF, #00d2ff);
@@ -96,6 +106,7 @@
             margin-left: 10px;
         }
 
+        /* Hover effect for the form button */
         form button:hover {
             background: linear-gradient(45deg, #0056b3, #00aaff);
         }
@@ -105,47 +116,57 @@
     <div class="container">
         <div class="flex-wrapper">
             <h1 id="searchLabel">GeoGnossis</h1>
+            <!-- Form for searching places -->
             <form id="locationForm">
                 <input type="text" id="placeName" name="placeName" placeholder="Enter a place name or coordinates (latitude,longitude)" required>
                 <button type="submit">Search</button>
             </form>
         </div>
+        <!-- Element where the map will be displayed -->
         <div id="map"></div>
     </div>
     <script>
+        // Event listener for form submission
         document.getElementById('locationForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const placeName = document.getElementById('placeName').value;
-            getAttractions(placeName);
+            event.preventDefault(); // Preventing the form from submitting the traditional way
+            const placeName = document.getElementById('placeName').value; // Getting the value of the input field
+            getAttractions(placeName); // Calling the function to fetch attractions
         });
 
+        // Function to fetch attractions based on place name
         async function getAttractions(place) {
             try {
+                // Make a POST request to the server to get attractions
                 const response = await axios.post('/getAttractions', { place });
                 const data = response.data;
-                const attractions = data.attractions;
-                const location = data.location;
-                displayMap(attractions, location);
+                const attractions = data.attractions; // Getting the attractions from the response
+                const location = data.location; // Getting the location from the response
+                displayMap(attractions, location); // Calling the function to display the map
             } catch (error) {
-                console.error('Error fetching attractions:', error);
+                console.error('Error fetching attractions:', error); // Logging any error that occurs
             }
         }
 
+        // Function to display the map with attractions
         function displayMap(attractions, location) {
-            const map = L.map('map').setView([37.7749, -122.4194], 13); // Default to San Francisco
+            // Initializing the map, defaulting to San Francisco if no location is provided
+            const map = L.map('map').setView([37.7749, -122.4194], 13);
 
+            // If a location is provided, setting the map view to that location
             if (location) {
-                map.setView([location.lat, location.lon], 13); // Center the map on the location
+                map.setView([location.lat, location.lon], 13);
             }
-                
+
+            // Adding OpenStreetMap tiles to the map
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 
+            // Adding markers for each attraction on the map
             attractions.forEach(attraction => {
                 L.marker([attraction.lat, attraction.lon])
-                    .bindPopup(attraction.name)
-                    .addTo(map);
+                    .bindPopup(attraction.name) // Adding a popup with the attraction's name
+                    .addTo(map); // Adding the marker to the map
             });
         }
     </script>
